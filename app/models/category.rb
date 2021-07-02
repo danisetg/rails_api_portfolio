@@ -1,5 +1,7 @@
 class Category < ApplicationRecord
-  belongs_to :category, dependent: :destroy
+  belongs_to :category, optional: true
   has_many :category
-  belongs_to :product, dependent: :destroy
+  has_many :product
+
+  validates :name, presence: true, uniqueness: { case_sensitive: false }
 end
