@@ -1,5 +1,6 @@
 class CategoriesController < ApplicationController
     include Response
+    before_action :set_category, only: [:update, :destory]
     #/categories
     def index
         @categories = Category.where(category_id: nil)
@@ -17,7 +18,7 @@ class CategoriesController < ApplicationController
     end
 
     def destroy
-        @category = Category.find(params[:id])
+        
         if @category.destroy
             json_response({message: "Category deleted successfully"})
         else
@@ -26,6 +27,17 @@ class CategoriesController < ApplicationController
         
     end
 
+    def update
+        if @category.update(category_params)
+            json_response(@category)
+        else
+            json_response(@category.errors, :unprocessable_entity)
+        end
+    end
+
+    def set_category
+        @category = Category.find(params[:id])
+    end
     private
     def category_params
         params.require(:category).permit(:name, :category_id)
