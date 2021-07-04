@@ -2,7 +2,7 @@ class CategoriesController < ApplicationController
     include Response
     #/categories
     def index
-        @categories = Category.all
+        @categories = Category.where(category_id: nil)
         json_response(@categories)
     end
 
@@ -10,6 +10,16 @@ class CategoriesController < ApplicationController
         @category = Category.new(category_params)
         if @category.save
             json_response(@category, :created)
+        else
+            json_response(@category.errors, :unprocessable_entity)
+        end
+        
+    end
+
+    def destroy
+        @category = Category.find(params[:id])
+        if @category.destroy
+            json_response({message: "Category deleted successfully"})
         else
             json_response(@category.errors, :unprocessable_entity)
         end
