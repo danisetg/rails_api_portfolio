@@ -1,9 +1,9 @@
 class CategoriesController < ApplicationController
     include Response
-    before_action :set_category, only: [:update, :destory]
+    before_action :set_category, only: [:update, :destroy, :show]
     #/categories
     def index
-        @categories = Category.where(category_id: nil)
+        @categories = Category.where(parent_id: nil)
         json_response(@categories)
     end
 
@@ -18,7 +18,6 @@ class CategoriesController < ApplicationController
     end
 
     def destroy
-        
         if @category.destroy
             json_response({message: "Category deleted successfully"})
         else
@@ -35,11 +34,14 @@ class CategoriesController < ApplicationController
         end
     end
 
+    def show
+        json_response(@category)
+    end
     def set_category
         @category = Category.find(params[:id])
     end
     private
     def category_params
-        params.require(:category).permit(:name, :category_id)
+        params.require(:category).permit(:name, :parent_id)
     end
 end
